@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "backendapi.fullname" . }}-backend-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "backendapi.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.backendapi.service.annotations | nindent 4 }}
+spec:
+  type: {{ .Values.backendapi.service.type }}
+  ports:
+   - port: {{ .Values.backendapi.service.port }}
+     targetPort: 5000
+     protocol: TCP
+     name: http
+  selector:
+    {{- include "backendapi.selectorLabels" . | nindent 4 }}

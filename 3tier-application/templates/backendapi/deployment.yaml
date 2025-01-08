@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "backendapi.fullname" . }}-backend-api
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "backendapi.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.backendapi.autoscaling.enabled }}
+  replicas: {{ .Values.backendapi.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "backendapi.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.backendapi.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "backendapi.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.backendapi.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "backendapi.serviceAccountName" . }}-backend-api
+      securityContext:
+        {{- toYaml .Values.backendapi.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.backendapi.securityContext | nindent 12 }}
+          image: "{{ .Values.backendapi.image.repository }}:{{ .Values.backendapi.image.backendapiTag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.backendapi.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backendapi.containerPort }}
+                    
+          resources:
+            {{- toYaml .Values.backendapi.resources | nindent 12 }}
+      {{- with .Values.backendapi.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backendapi.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backendapi.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

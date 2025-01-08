@@ -1,0 +1,91 @@
+
+
+namespace: frontend
+frontend:
+
+  revisionHistoryLimit: 3
+  replicaCount: 1
+  tags:
+    environment: dev
+    application: frontend
+
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+    targetMemoryUtilizationPercentage: 80
+
+  securityContext:
+    runAsUser: 1234
+    runAsGroup: 1234
+  podSecurityContext:
+    fsGroup: 1234       
+
+  image:
+    repository: dockerkumars12/frontend
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    frontendTag: "5394caf"
+
+  service:
+    port: 30005
+    type: NodePort  
+
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128mi
+    requests:
+      cpu: 100m
+      memory: 128mi
+
+  initialDelaySeconds: 60
+  periodSeconds: 60
+  timeoutSeconds: 60
+  containerPort: 8080
+
+
+
+backendapi:
+
+  revisionHistoryLimit: 3
+  replicaCount: 1
+  tags:
+    environment: dev
+    application: backendapi
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 2
+    targetMemoryUtilizationPercentage: 80
+
+  securityContext:
+    runAsUser: 1234
+    runAsGroup: 1234
+  podSecurityContext:
+    fsGroup: 1234   
+
+  image:
+    repository: dockerkumars12/api
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    backendapiTag: "021bec5"
+
+  service:
+    port: 8000
+    type: ClusterIp  
+
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128mi
+    requests:
+      cpu: 100m
+      memory: 128mi
+
+  initialDelaySeconds: 60
+  periodSeconds: 60
+  timeoutSeconds: 60
+  containerPort: 5000
