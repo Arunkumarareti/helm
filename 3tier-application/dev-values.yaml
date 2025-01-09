@@ -28,17 +28,17 @@ frontend:
     frontendTag: "5394caf"
 
   service:
-    port: 30005
+    port: 80
     type: NodePort  
 
 
   resources:
     limits:
       cpu: 100m
-      memory: 128mi
+      memory: 128Mi
     requests:
       cpu: 100m
-      memory: 128mi
+      memory: 128Mi
 
   initialDelaySeconds: 60
   periodSeconds: 60
@@ -74,16 +74,16 @@ backendapi:
 
   service:
     port: 8000
-    type: ClusterIp  
+    type: ClusterIP 
 
 
   resources:
     limits:
       cpu: 100m
-      memory: 128mi
+      memory: 128Mi
     requests:
       cpu: 100m
-      memory: 128mi
+      memory: 128Mi
 
   initialDelaySeconds: 60
   periodSeconds: 60
